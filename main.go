@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -22,8 +21,11 @@ func main() {
 
 	db.Create(&User{Name: "Pallat"})
 
-	var u User
-	db.First(&u)
-
-	fmt.Println(u.ID, u.Name)
+	r := gin.Default()
+	r.GET("/users", func(c *gin.Context) {
+		var u User
+		db.First(&u)
+		c.JSON(200, u)
+	})
+	r.Run()
 }
