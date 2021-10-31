@@ -17,17 +17,6 @@ container:
 	docker run -p:8081:8081 --env-file ./local.env --link some-mariadb:db \
 	--name myapp todo:test
 
-
-
-
-
-
-
-
-
-
-
-
 installvegeta:
 	go install github.com/tsenart/vegeta@latest
 vegeta:
