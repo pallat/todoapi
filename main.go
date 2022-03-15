@@ -26,12 +26,6 @@ var (
 )
 
 func main() {
-	_, err := os.Create("/tmp/live")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer os.Remove("/tmp/live")
-
 	err = godotenv.Load("local.env")
 	if err != nil {
 		log.Printf("please consider environment variables: %s\n", err)
@@ -42,7 +36,9 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&todo.Todo{})
+	if err :=db.AutoMigrate(&todo.Todo{});err != nil {
+		log.Println("auto migrate db",err)
+	}
 
 	r := gin.Default()
 	config := cors.DefaultConfig()
