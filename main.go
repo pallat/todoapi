@@ -17,7 +17,6 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"github.com/pallat/todoapi/auth"
 	"github.com/pallat/todoapi/todo"
 )
 
@@ -68,13 +67,11 @@ func main() {
 		})
 	})
 
-	r.GET("/tokenz", auth.AccessToken(os.Getenv("SIGN")))
-	protected := r.Group("", auth.Protect([]byte(os.Getenv("SIGN"))))
 
 	handler := todo.NewTodoHandler(db)
-	protected.POST("/todos", handler.NewTask)
-	protected.GET("/todos", handler.List)
-	protected.DELETE("/todos/:id", handler.Remove)
+	r.POST("/todos", handler.NewTask)
+	r.GET("/todos", handler.List)
+	r.DELETE("/todos/:id", handler.Remove)
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
